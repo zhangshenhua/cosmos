@@ -1,20 +1,21 @@
 # cosmos
 宇宙
 
+
 # 面向谁？
 首先面向我自己。   
 其次面向所有需要边讨论边开发的程序员，    
 以及为数不多的[lisp][3]爱好者。  
-特别面向所有cosmos项目的开发者。  
-最后面向谁，是由所有cosmos开发者共同决定的。   
+特别面向所有[cosmos][4]项目的开发者。  
+最后面向谁，是由所有[cosmos][4]开发者共同决定的。   
 
-[3]:https://en.wikipedia.org/wiki/Lisp
+
 
 # 它是什么?
 它是一构建在WEB上的多人 [REPL][1]运行时生态系统。
 
 
-[1]: https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop
+
 
 
 # 为什么做它？
@@ -30,14 +31,18 @@
 但，小宇宙是图灵完备的，就在小宇宙里构建这个小宇宙本身。      
 
 
-[2]: https://en.wikipedia.org/wiki/Git
+
 
 
 # cosmos推广进度
 过几天我会把一个将将能跑的DEMO推上来，敬请期待。    
 
 
-# 如何用cosmos盈利
+# 如何用[cosmos]盈利
 我个人的利润恐怕十年之内都指望不上。    
-利润属于发明cosmos应用，探索cosmos应用领域，构造和推广cosmos生态的个人或组织。    
+利润属于发明[cosmos]应用，探索[cosmos]应用领域，构造和推广[cosmos]生态的个人或组织。    
 
+[1]: https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop
+[2]: https://en.wikipedia.org/wiki/Git
+[3]:https://en.wikipedia.org/wiki/Lisp
+[4]:https://github.com/zhangshenhua/cosmos
