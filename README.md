@@ -38,9 +38,9 @@
 过几天我会把一个将将能跑的DEMO推上来，敬请期待。    
 
 
-# 如何用[cosmos]盈利
+# 如何用[cosmos][4]盈利
 我个人的利润恐怕十年之内都指望不上。    
-利润属于发明[cosmos]应用，探索[cosmos]应用领域，构造和推广[cosmos]生态的个人或组织。    
+利润属于发明[cosmos][4]应用，探索[cosmos][4]应用领域，构造和推广[cosmos][4]生态的个人或组织。    
 
 [1]: https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop
 [2]: https://en.wikipedia.org/wiki/Git
