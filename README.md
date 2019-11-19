@@ -31,18 +31,21 @@
 但，小宇宙是图灵完备的，就在小宇宙里构建这个小宇宙本身。      
 
 
-
-
-
-# cosmos推广进度
-过几天我会把一个将将能跑的DEMO推上来，敬请期待。    
-
-
 # 如何用[cosmos][4]盈利
 我个人的利润恐怕十年之内都指望不上。    
 利润属于发明[cosmos][4]应用，探索[cosmos][4]应用领域，构造和推广[cosmos][4]生态的个人或组织。    
+
+
+# todo:
+    找人做一个原型达成意思表示       doing
+    找人做一个将将能跑的DEMO推上来   doing
+    部署一台cosmos服务器             panding
+    设计一些简单用例                 panding
+
 
 [1]: https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop
 [2]: https://en.wikipedia.org/wiki/Git
 [3]:https://en.wikipedia.org/wiki/Lisp
 [4]:https://github.com/zhangshenhua/cosmos
+
+
