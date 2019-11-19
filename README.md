@@ -37,10 +37,10 @@
 
 
 # todo:
-    找人做一个原型达成意思表示       doing
-    找人做一个将将能跑的DEMO推上来   doing
-    部署一台cosmos服务器             panding
-    设计一些简单用例                 panding
+## 找人做一个原型达成意思表示       doing
+## 找人做一个将将能跑的DEMO推上来   doing
+## 部署一台cosmos服务器             pending
+## 设计一些简单用例                 pending
 
 
 [1]: https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop
