@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewpoet" content="width=device-width, init-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <title>Document</title>
+
+    </head>
+    <body>
+        <textarea id='text' name="Text1" cols="40" rows="5"></textarea>
+        <button id='btn' type="button">发送</button> 
+        <script>
+            var ws = new WebSocket(`ws://127.0.0.1:2333`);
+            ws.onopen = function () {
+                ws.send(`<js>
+                alert('来自客户端的消息');
+                </js>`);
+                document.getElementById('btn').onclick = ()=>{
+                    ws.send(document.getElementById('text').value)
+                };
+            };
+
+            ws.onmessage = (e)=>{
+                var str = e.data;
+                var jscodes = str.match(/<js>([\s\S]*?)<\/js>/m);
+                var p = document.createElement('div')
+                
+                if (jscodes) {
+                    p.innerText = str
+                }
+                else {
+                    p.innerHTML = str
+                }
+
+                document.body.appendChild(p);
+                
+                eval(jscodes?jscodes[1]:'');
+
+
+
+            };
+        </script>
+
+    </body>
+</html>
