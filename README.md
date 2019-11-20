@@ -39,7 +39,9 @@
 # todo:
 ## 找人做一个原型达成意思表示       doing
 ## 找人做一个将将能跑的DEMO推上来   doing
-### 解决url路由问题，在浏览器中输入x.x.x.x:2333/aaa/bbb/ccc/uuu将进入aaa/bbb/ccc宇宙，并作为其中的uuu用户。    doing
+### 解决uri路由问题，在浏览器中输入x.x.x.x:2333/aaa/bbb/ccc/uuu将进入aaa/bbb/ccc宇宙，并作为其中的uuu用户。    doing
+#### 若输入的uri为空，则进入该服务器的默认“0”号宇宙，没有特定用户名。                  pending
+#### /aaa/bbb/ccc/与/aaa/bbb/ccc不同：前者是匿名用户进入aaa/bbb/ccc宇宙，后者是ccc进入aaa/bbb宇宙。 doing
 ### 解决数据结构问题，使得同一宇宙里的人讲话才能听见,一个服务器可以维持多个宇宙。  doing
 ## 部署一台cosmos服务器             pending
 ## 设计一些简单用例                 pending
