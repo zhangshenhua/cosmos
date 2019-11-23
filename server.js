@@ -1,4 +1,5 @@
 var ws = require('nodejs-websocket');
+var HashMap = require('hashmap');
 var http = require('http'),
     fs = require('fs');
 const querystring = require('querystring');
@@ -56,41 +57,53 @@ console. log('Server running at http://localhost:3000/');
 
 function arrayRemove(arr, value) {
     return arr.filter(function(ele){
-        return ele.key !== value.key;
+        return ele.key != value.key;
     });
 }
 
 
-var cosmosHash = {};
+var cosmosHash = new HashMap();
 var server = ws.createServer(function(conn){
     var uri_hash = uri_parse(conn.path),
-    cid = uri_hash.cid,
-    uid = uri_hash.uid;
+        cid = uri_hash.cid,
+        uid = uri_hash.uid,
+        key = conn.key;
 
-    console.log(`New connection $cid/$uid`);
-
-    if (!cosmosHash[cid]) {
-        cosmosHash[cid] = [conn];
-    } else {
-        (cosmosHash[cid]).push(conn);
-    }
-
-    domain_boardcast(cosmosHash[cid],`${cid}: ${uid} 上线了`);
-    
-    conn.on('text', function(str){  
-        console.log(`${cid}/${uid}: ${str}`);
-        domain_boardcast(cosmosHash[cid], `${uid}: ${str}`);
-    });
 
     conn.on('error', (err)=>{
-        console.log(err)
+        console.log(err);
+        //if (err.code == 'ECONNRESET') {
+            cosmosHash.get(cid).delete(key);
+        //}
+        
     })
 
+
     conn.on('close', (code, reason) => {
-        domain_boardcast(cosmosHash[cid],`${cid}: ${uid} 下线了`);
-        console.log("Connection closed");
-        arrayRemove(cosmosHash[cid], conn);
+        cosmosHash.get(cid).delete(key);
+        domain_boardcast(cosmosHash.get(cid).values(),`${cid}: ${uid} 下线了`);
+        console.log(`Connection closed ${key}`);
     })
+
+
+    conn.on('text', function(str) {  
+        console.log(`${cid}/${uid}: ${str}`);
+        domain_boardcast(cosmosHash.get(cid).values(), `${uid}: ${str}`);
+    });
+
+
+    console.log(`New connection $cid/$uid ${key}`);
+    
+    if (!cosmosHash.get(cid)) {
+        var tmp = new HashMap();
+        tmp.set(key, conn);
+        cosmosHash.set(cid, tmp);
+    } else {
+        cosmosHash.get(cid).set(key, conn);
+    }
+
+    domain_boardcast(cosmosHash.get(cid).values(), `${cid}: ${uid} 上线了`);
+    console.log(cosmosHash.get(cid).count());
 }).listen(2333);
 
 
