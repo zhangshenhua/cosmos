@@ -3,6 +3,7 @@ var http = require('http'),
     fs = require('fs');
 const querystring = require('querystring');
 
+
 function serveStaticFile(res, path, contentType, responseCode) {
     if(!responseCode) responseCode = 200; 
     fs.readFile(__dirname + path, function(err, data) 
@@ -16,9 +17,6 @@ function serveStaticFile(res, path, contentType, responseCode) {
         }
     }); 
 }
-
-
-
 
 
 function uri_parse (str_uri) {
@@ -83,10 +81,12 @@ var server = ws.createServer(function(conn){
 function boardcast(str) {
     server.connections.forEach(
         conn => {
+            console.log(str);
             conn.sendText(str);
         }
     )
 }
+
 
 function domain_boardcast(connections, str) {
     connections.forEach(
