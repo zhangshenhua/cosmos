@@ -34,6 +34,7 @@ function uri_parse (str_uri) {
     return {"cid": querystring.unescape(cid), "uid": querystring.unescape(uid)}
 }
 
+
 http.createServer(function (req, res) { 
     var path = req.url;
     console.log(path);
@@ -52,7 +53,15 @@ http.createServer(function (req, res) {
 }).listen(3000); 
 console. log('Server running at http://localhost:3000/');
 
-var CMAT = {};
+
+function arrayRemove(arr, value) {
+    return arr.filter(function(ele){
+        return ele.key !== value.key;
+    });
+}
+
+
+var cosmosHash = {};
 var server = ws.createServer(function(conn){
     var uri_hash = uri_parse(conn.path),
     cid = uri_hash.cid,
@@ -60,11 +69,17 @@ var server = ws.createServer(function(conn){
 
     console.log(`New connection $cid/$uid`);
 
-    boardcast(`${cid}: ${uid} 上线了`);
+    if (!cosmosHash[cid]) {
+        cosmosHash[cid] = [conn];
+    } else {
+        (cosmosHash[cid]).push(conn);
+    }
+
+    domain_boardcast(cosmosHash[cid],`${cid}: ${uid} 上线了`);
     
     conn.on('text', function(str){  
-        console.log(`${cid}/${uid}: ${str}`)
-        boardcast(`${uid}: ${str}`);
+        console.log(`${cid}/${uid}: ${str}`);
+        domain_boardcast(cosmosHash[cid], `${uid}: ${str}`);
     });
 
     conn.on('error', (err)=>{
@@ -73,12 +88,13 @@ var server = ws.createServer(function(conn){
 
     conn.on('close', (code, reason) => {
         boardcast(`${cid}: ${uid} 下线了`);
-        console.log("Connection closed")
+        console.log("Connection closed");
+        arrayRemove(cosmosHash[cid], conn);
     })
 }).listen(2333);
 
 
-function boardcast(str) {
+function global_boardcast(str) {
     server.connections.forEach(
         conn => {
             console.log(str);
@@ -91,6 +107,7 @@ function boardcast(str) {
 function domain_boardcast(connections, str) {
     connections.forEach(
         conn => {
+            console.log(str);
             conn.sendText(str);
         }
     )
