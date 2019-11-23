@@ -37,6 +37,13 @@
 利润属于发明[cosmos][4]应用，探索[cosmos][4]应用领域，构造和推广[cosmos][4]生态的个人或组织。    
 
 
+# 如何部署？   
+假设读者对node.js有基本的了解：     
+1.将server.js client.html复制到同一目录下。     
+2.执行node server.js               
+
+我从头就希望cosmos服务器是任何人都能轻松部署的服务器。
+
 # todo:
 ## 找人做一个原型达成意思表示       doing
 ## 找人做一个将将能跑的DEMO推上来   doing
