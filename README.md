@@ -42,7 +42,7 @@
 1.将server.js client.html复制到同一目录下。     
 2.执行node server.js               
 
-我从头就希望cosmos服务器是任何人都能轻松部署的服务器。
+我从头就希望cosmos服务器是任何人都能轻松部署的服务器。甚至可以部署在树莓派上。
 
 # todo:
 ## 找人做一个原型达成意思表示       doing
