@@ -87,7 +87,7 @@ var server = ws.createServer(function(conn){
     })
 
     conn.on('close', (code, reason) => {
-        boardcast(`${cid}: ${uid} 下线了`);
+        domain_boardcast(cosmosHash[cid],`${cid}: ${uid} 下线了`);
         console.log("Connection closed");
         arrayRemove(cosmosHash[cid], conn);
     })
