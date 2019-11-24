@@ -32,7 +32,7 @@ function uri_parse (str_uri) {
     } else {
         cid = uri;
     }
-    return {"cid": querystring.unescape(cid), "uid": querystring.unescape(uid)}
+    return {"cid": decodeURI(cid), "uid": decodeURI(uid)}
 }
 
 
