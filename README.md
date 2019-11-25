@@ -51,8 +51,14 @@
 #### 若输入的uri为空，则进入该服务器的默认“/”号宇宙，没有特定用户名。                  done
 #### /aaa/bbb/ccc/与/aaa/bbb/ccc不同：前者是匿名用户进入aaa/bbb/ccc宇宙，后者是ccc进入aaa/bbb宇宙。 done
 ### 解决数据结构问题，使得同一宇宙里的人讲话才能听见,一个服务器可以维持多个宇宙。  done
+## 
 ## 部署一台cosmos服务器             done
-## 设计一些简单用例                 doing
+## 设计一些简单用例                 pending
+## 规定并实现一些最高法则            doing
+### 增强“太初”编辑器                doing 
+### 优化会话机制                    doing
+### 改进后台规则                    doing
+
 
 
 [1]: https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop
