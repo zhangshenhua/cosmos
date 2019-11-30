@@ -22,26 +22,20 @@ function serveStaticFile(res, path, contentType, responseCode) {
 
 function uri_parse (str_uri) {
     var uri = str_uri;
-    var cid = '/',
-        uid = '';
+    var cid, uid;
 
     var group;
-    if (group = uri.match('^(/.*)/(.*)$')) {
-        cid = group[1];
-        uid = group[2];
-    } else {
-        cid = uri;
-    }
+    if (group = uri.match('^/(.*?)(/([^/]*))?$')) {
+        cid = group[1] || '';
+        uid = group[3] || '';
+    } 
+    console.log({"cid": decodeURI(cid), "uid": decodeURI(uid)});
     return {"cid": decodeURI(cid), "uid": decodeURI(uid)}
 }
 
 
 http.createServer(function (req, res) { 
     var path = req.url;
-    console.log(path);
-    var uri_hash = uri_parse(path),
-        cid = uri_hash.cid,
-        uid = uri_hash.uid;
 
     switch(path) {
         case '/favicon.ico':
@@ -92,7 +86,7 @@ var server = ws.createServer(function(conn){
     });
 
 
-    console.log(`New connection $cid/$uid ${key}`);
+    console.log(`New connection ${cid}/${uid} ${key}`);
     
     if (!cosmosHash.get(cid)) {
         var tmp = new HashMap();
