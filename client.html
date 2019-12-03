@@ -6,7 +6,7 @@
         <title>Document</title>
     </head>
     <body>
-        <textarea id='text' name="Text1" cols="40" rows="5"></textarea>
+        <textarea id='text' name="Text1" cols="80" rows="5"></textarea>
         <button id='btn' type="button">发送</button> 
         <script>
             var ws = new WebSocket(`ws://${window.location.hostname}:2333${window.location.pathname}`);
@@ -30,7 +30,6 @@
 
                 document.body.appendChild(p);
                 eval(jscodes?jscodes[1]:'');
-
             };
         </script>
     </body>
