@@ -1,8 +1,8 @@
-var ws = require('nodejs-websocket');
-var HashMap = require('hashmap');
 var http = require('http'),
     fs = require('fs');
-const querystring = require('querystring');
+
+var ws = require('nodejs-websocket');
+var HashMap = require('hashmap');
 
 
 function serveStaticFile(res, path, contentType, responseCode) {
@@ -70,14 +70,14 @@ var server = ws.createServer(function(conn){
             cosmosHash.get(cid).delete(key);
         //}
         
-    })
+    });
 
 
     conn.on('close', (code, reason) => {
         cosmosHash.get(cid).delete(key);
         domain_boardcast(cosmosHash.get(cid).values(),`${cid}: ${uid} 下线了`);
         console.log(`Connection closed ${key}`);
-    })
+    });
 
 
     conn.on('text', function(str) {  
