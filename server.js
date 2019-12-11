@@ -6,17 +6,17 @@ var HashMap = require('hashmap');
 
 
 function serveStaticFile(res, path, contentType, responseCode) {
-    if(!responseCode) responseCode = 200; 
-    fs.readFile(__dirname + path, function(err, data) 
-    { 
-        if(err) { 
-            res.writeHead( 500, {'Content-Type': 'text/plain' }); 
-            res.end('500 - Internal Error'); 
-        } else { 
-            res.writeHead(responseCode, {'Content-Type': contentType}); 
-            res.end(data); 
+    if(!responseCode) responseCode = 200;
+    fs.readFile(__dirname + path, function(err, data)
+    {
+        if(err) {
+            res.writeHead( 500, {'Content-Type': 'text/plain' });
+            res.end('500 - Internal Error');
+        } else {
+            res.writeHead(responseCode, {'Content-Type': contentType});
+            res.end(data);
         }
-    }); 
+    });
 }
 
 
@@ -25,16 +25,16 @@ function uri_parse (str_uri) {
     var cid, uid;
 
     var group;
-    if (group = uri.match('^/(.*?)(/([^/]*))?$')) {
+  if (group = uri.match('^/(.*?)(/([^/]*))?$')) {
         cid = group[1] || '';
         uid = group[3] || '';
-    } 
+    }
     console.log({"cid": decodeURI(cid), "uid": decodeURI(uid)});
     return {"cid": decodeURI(cid), "uid": decodeURI(uid)}
 }
 
 
-http.createServer(function (req, res) { 
+http.createServer(function (req, res) {
     var path = req.url;
 
     switch(path) {
@@ -45,13 +45,14 @@ http.createServer(function (req, res) {
             break;
     }
     //res.end(`cid=${cid} </br> uid=${uid}`);
-}).listen(3000); 
+}).listen(3000);
+
 console. log('Server running at http://localhost:3000/');
 
 
 function arrayRemove(arr, value) {
     return arr.filter(function(ele){
-        return ele.key != value.key;
+        return ele !== value;
     });
 }
 
@@ -69,7 +70,6 @@ var server = ws.createServer(function(conn){
         //if (err.code == 'ECONNRESET') {
             cosmosHash.get(cid).delete(key);
         //}
-        
     });
 
 
@@ -80,14 +80,14 @@ var server = ws.createServer(function(conn){
     });
 
 
-    conn.on('text', function(str) {  
+    conn.on('text', function(str) {
         console.log(`${cid}/${uid}: ${str}`);
         domain_boardcast(cosmosHash.get(cid).values(), `${uid}: ${str}`);
     });
 
 
     console.log(`New connection ${cid}/${uid} ${key}`);
-    
+
     if (!cosmosHash.get(cid)) {
         var tmp = new HashMap();
         tmp.set(key, conn);

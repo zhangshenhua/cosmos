@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <title>Document</title>
-    </head>
-    <body>
-        <textarea id='text' name="Text1" cols="80" rows="5"></textarea>
-        <button id='btn' type="button">发送</button> 
-        <script>
-            var ws = new WebSocket(`ws://${window.location.hostname}:2333${window.location.pathname}`);
-            ws.onopen = function () {
-                document.getElementById('btn').onclick = ()=>{
-                    ws.send(document.getElementById('text').value);
-                };
-            };
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <title>Document</title>
+</head>
+<body>
+<textarea id='text' name="Text1" cols="80" rows="5"></textarea>
+<button id='btn' type="button">发送</button>
+<script>
+  var ws = new WebSocket(`ws://${window.location.hostname}:2333${window.location.pathname}`);
 
-            ws.onmessage = (e)=>{
-                var str = e.data;
-                var jscodes = str.match(/<js>([\s\S]*?)<\/js>/m);
-                var p = document.createElement('div')
-                
-                if (jscodes) {
-                    p.innerText = str
-                }
-                else {
-                    p.innerHTML = str
-                }
+  ws.onopen = function () {
+    document.getElementById('btn').onclick = () => {
+      ws.send($('#text').val())
+    };
+  };
 
-                document.body.appendChild(p);
-                eval(jscodes?jscodes[1]:'');
-            };
-        </script>
-    </body>
+  ws.onmessage = (e) => {
+    var str = e.data;
+    var jscodes = str.match(/<js>([\s\S]*?)<\/js>/m);
+    var p = document.createElement('div')
+
+    if (jscodes) {
+      p.innerText = str
+    } else {
+      p.innerHTML = str
+    }
+
+    $('#text').val('')
+
+    document.body.appendChild(p);
+    eval(jscodes ? jscodes[1] : '');
+  };
+</script>
+</body>
 </html>
