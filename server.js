@@ -3,6 +3,9 @@ var http = require('http'),
 
 var ws = require('nodejs-websocket');
 var HashMap = require('hashmap');
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
+const dburl = 'mongodb://localhost:27017';
 
 
 function serveStaticFile(res, path, contentType, responseCode) {
@@ -96,9 +99,20 @@ var server = ws.createServer(function(conn){
         cosmosHash.get(cid).set(key, conn);
     }
 
+
     domain_boardcast(cosmosHash.get(cid).values(), `${cid}: ${uid} 上线了`);
     console.log(cosmosHash.get(cid).count());
 }).listen(2333);
+
+
+function BANG(conn, cid) {
+
+}
+
+
+function makeCommit () {
+    
+}
 
 
 function global_boardcast(str) {
