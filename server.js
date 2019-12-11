@@ -25,7 +25,7 @@ function uri_parse (str_uri) {
     var cid, uid;
 
     var group;
-  if (group = uri.match('^/(.*?)(/([^/]*))?$')) {
+    if (group = uri.match('^/(.*?)(/([^/]*))?$')) {
         cid = group[1] || '';
         uid = group[3] || '';
     }
