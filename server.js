@@ -4,6 +4,9 @@ var http = require('http'),
 var ws = require('nodejs-websocket');
 var HashMap = require('hashmap');
 
+mylog = (s) => {
+    console.log((new Date()).toLocaleString() + ' ' + `{${s}}`);
+}
 
 function serveStaticFile(res, path, contentType, responseCode) {
     if(!responseCode) responseCode = 200;
@@ -58,6 +61,7 @@ function arrayRemove(arr, value) {
 
 
 var cosmosHash = new HashMap();
+
 var server = ws.createServer(function(conn){
     var uri_hash = uri_parse(conn.path),
         cid = uri_hash.cid,
@@ -81,12 +85,12 @@ var server = ws.createServer(function(conn){
 
 
     conn.on('text', function(str) {
-        console.log(`${cid}/${uid}: ${str}`);
+        mylog(`${cid}/${uid}: ${str}`);
         domain_boardcast(cosmosHash.get(cid).values(), `${uid}: ${str}`);
     });
 
 
-    console.log(`New connection ${cid}/${uid} ${key}`);
+    mylog(`New connection ${cid}/${uid} ${key}`);
 
     if (!cosmosHash.get(cid)) {
         var tmp = new HashMap();
@@ -97,14 +101,14 @@ var server = ws.createServer(function(conn){
     }
 
     domain_boardcast(cosmosHash.get(cid).values(), `${cid}: ${uid} 上线了`);
-    console.log(cosmosHash.get(cid).count());
+    mylog(cosmosHash.get(cid).count());
 }).listen(2333);
 
 
 function global_boardcast(str) {
     server.connections.forEach(
         conn => {
-            console.log(str);
+            mylog(str);
             conn.sendText(str);
         }
     )
@@ -114,7 +118,7 @@ function global_boardcast(str) {
 function domain_boardcast(connections, str) {
     connections.forEach(
         conn => {
-            console.log(str);
+            mylog(str);
             conn.sendText(str);
         }
     )
