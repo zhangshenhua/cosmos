@@ -71,9 +71,8 @@ var server = ws.createServer(function(conn){
 
     conn.on('error', (err)=>{
         console.log(err);
-        //if (err.code == 'ECONNRESET') {
-            cosmosHash.get(cid).delete(key);
-        //}
+        cosmosHash.get(cid).delete(key);
+        mylog(cosmosHash.get(cid).count());
     });
 
 
@@ -81,6 +80,7 @@ var server = ws.createServer(function(conn){
         cosmosHash.get(cid).delete(key);
         domain_boardcast(cosmosHash.get(cid).values(),`${cid}: ${uid} 下线了`);
         console.log(`Connection closed ${key}`);
+        mylog(cosmosHash.get(cid).count());
     });
 
 
@@ -88,7 +88,6 @@ var server = ws.createServer(function(conn){
         mylog(`${cid}/${uid}: ${str}`);
         domain_boardcast(cosmosHash.get(cid).values(), `${uid}: ${str}`);
     });
-
 
     mylog(`New connection ${cid}/${uid} ${key}`);
 
@@ -106,9 +105,9 @@ var server = ws.createServer(function(conn){
 
 
 function global_boardcast(str) {
+    mylog(str);
     server.connections.forEach(
         conn => {
-            mylog(str);
             conn.sendText(str);
         }
     )
@@ -116,9 +115,9 @@ function global_boardcast(str) {
 
 
 function domain_boardcast(connections, str) {
+    mylog(str);
     connections.forEach(
         conn => {
-            mylog(str);
             conn.sendText(str);
         }
     )
