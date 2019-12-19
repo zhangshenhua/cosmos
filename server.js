@@ -25,15 +25,16 @@ function serveStaticFile(res, path, contentType, responseCode) {
 
 function uri_parse (str_uri) {
     var uri = str_uri;
-    var cid, uid;
+    var cid, uid_from, uid_to;
 
     var group;
-    if (group = uri.match('^/(.*?)(/([^/]*))?$')) {
+    if (group = uri.match('^/(.*?)(/([^/@]*))?(@([^/]*))?$')) {
         cid = group[1] || '';
-        uid = group[3] || '';
+        uid_from = group[3] || '';
+        uid_to = group[5] || '';
     }
-    console.log({"cid": decodeURI(cid), "uid": decodeURI(uid)});
-    return {"cid": decodeURI(cid), "uid": decodeURI(uid)}
+    console.log({"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)});
+    return {"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)}
 }
 
 
@@ -65,9 +66,8 @@ var cosmosHash = new HashMap();
 var server = ws.createServer(function(conn){
     var uri_hash = uri_parse(conn.path),
         cid = uri_hash.cid,
-        uid = uri_hash.uid,
+        uid_from = uri_hash.uid_from,
         key = conn.key;
-
 
     conn.on('error', (err)=>{
         console.log(err);
@@ -75,21 +75,19 @@ var server = ws.createServer(function(conn){
         mylog(cosmosHash.get(cid).count());
     });
 
-
     conn.on('close', (code, reason) => {
         cosmosHash.get(cid).delete(key);
-        domain_boardcast(cosmosHash.get(cid).values(),`${cid}: ${uid} 下线了`);
+        domain_boardcast(cosmosHash.get(cid).values(), makeCloseMessage(uid_from));
         console.log(`Connection closed ${key}`);
         mylog(cosmosHash.get(cid).count());
     });
 
-
     conn.on('text', function(str) {
-        mylog(`${cid}/${uid}: ${str}`);
-        domain_boardcast(cosmosHash.get(cid).values(), `${uid}: ${str}`);
+        mylog(str);
+        domain_boardcast(cosmosHash.get(cid).values(), str);
     });
 
-    mylog(`New connection ${cid}/${uid} ${key}`);
+    mylog(`New connection ${cid}/${uid_from} ${key}`);
 
     if (!cosmosHash.get(cid)) {
         var tmp = new HashMap();
@@ -99,14 +97,13 @@ var server = ws.createServer(function(conn){
         cosmosHash.get(cid).set(key, conn);
     }
 
-    domain_boardcast(cosmosHash.get(cid).values(), `${cid}: ${uid} 上线了`);
+    domain_boardcast(cosmosHash.get(cid).values(), makeOpenMessage(uid_from));
     mylog(cosmosHash.get(cid).count());
 }).listen(2333);
 
 
-function global_boardcast(str) {
-    mylog(str);
-    server.connections.forEach(
+function domain_boardcast(connections, str) {
+    connections.forEach(
         conn => {
             conn.sendText(str);
         }
@@ -114,11 +111,22 @@ function global_boardcast(str) {
 }
 
 
-function domain_boardcast(connections, str) {
-    mylog(str);
-    connections.forEach(
-        conn => {
-            conn.sendText(str);
+function makeMessage(from, to, text) {
+    return JSON.stringify(
+        {
+            'from': from,
+            'to': to,
+            'text': text,
         }
-    )
+    );
+}
+
+
+function makeOpenMessage(from) {
+    return makeMessage(from, '' , 'OPEN');
+}
+
+
+function makeCloseMessage(from) {
+    return makeMessage(from, '' , 'CLOSE');
 }

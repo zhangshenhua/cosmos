@@ -11,27 +11,71 @@
 <script>
   var ws = new WebSocket(`ws://${window.location.hostname}:2333${window.location.pathname}`);
 
+  function uri_parse (str_uri) {
+    var uri = str_uri;
+    var cid, uid_from, uid_to;
+
+    var group;
+    if (group = uri.match('^/(.*?)(/([^/@]*))?(@([^/]*))?$')) {
+        cid = group[1] || '';
+        uid_from = group[3] || '';
+        uid_to = group[5] || '';
+    }
+    console.log({"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)});
+    return {"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)}
+  }
+
+  var uri_hash = uri_parse(window.location.pathname),
+      cid = uri_hash.cid,
+      uid_from = uri_hash.uid_from,
+      uid_to = uri_hash.uid_to;
+
+
+  function makeMessage(from, to, text) {
+    return JSON.stringify(
+        {
+            'from': from,
+            'to': to,
+            'text': text,
+        }
+    );
+  }
+
+
+  
   ws.onopen = function () {
     document.getElementById('btn').onclick = () => {
-      ws.send($('#text').val())
+      ws.send(
+        makeMessage(
+          uid_from,
+          uid_to,
+          $('#text').val()));
     };
   };
 
   ws.onmessage = (e) => {
     var str = e.data;
-    var jscodes = str.match(/<js>([\s\S]*?)<\/js>/m);
-    var p = document.createElement('div')
+    var json_data = JSON.parse(str);
+    var jscodes = json_data.text.match(/<js>([\s\S]*?)<\/js>/m);
+    var p = document.createElement('div');
 
     if (jscodes) {
-      p.innerText = str
+      p.innerText = json_data.text;
     } else {
-      p.innerHTML = str
+      p.innerHTML = json_data.text;
     }
 
-    $('#text').val('')
-
+    $('<center><div></div></center>')
+      .text((new Date()).toLocaleString())
+      .appendTo('body');
+    $('<div></div>').text(json_data.from + 
+                          (json_data.to ? `@${json_data.to}`: '') + 
+                          ':' ).appendTo('body');
     document.body.appendChild(p);
+    $('<hr>').appendTo('body')
     eval(jscodes ? jscodes[1] : '');
+
+    $('#text').val('');
   };
 </script>
 </body>
