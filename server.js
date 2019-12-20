@@ -67,7 +67,9 @@ var server = ws.createServer(function(conn){
     var uri_hash = uri_parse(conn.path),
         cid = uri_hash.cid,
         uid_from = uri_hash.uid_from,
+        uid_to = uri_hash.uid_to,
         key = conn.key;
+    conn.uid_from = uid_from;
 
     conn.on('error', (err)=>{
         console.log(err);
@@ -84,10 +86,14 @@ var server = ws.createServer(function(conn){
 
     conn.on('text', function(str) {
         mylog(str);
-        domain_boardcast(cosmosHash.get(cid).values(), str);
+        domain_boardcast(
+            cosmosHash.get(cid).values().filter(
+                cn => cn.uid_from === uid_to || !uid_to), 
+            str);
     });
 
     mylog(`New connection ${cid}/${uid_from} ${key}`);
+    
 
     if (!cosmosHash.get(cid)) {
         var tmp = new HashMap();

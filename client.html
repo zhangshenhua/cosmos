@@ -50,6 +50,7 @@
           uid_from,
           uid_to,
           $('#text').val()));
+      $('#text').val('');
     };
   };
 
@@ -72,10 +73,8 @@
                           (json_data.to ? `@${json_data.to}`: '') + 
                           ':' ).appendTo('body');
     document.body.appendChild(p);
-    $('<hr>').appendTo('body')
+    $('<hr>').appendTo('body');
     eval(jscodes ? jscodes[1] : '');
-
-    $('#text').val('');
   };
 </script>
 </body>
