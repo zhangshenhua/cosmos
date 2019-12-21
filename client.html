@@ -6,8 +6,14 @@
   <title>Document</title>
 </head>
 <body>
-  <textarea id='text' name="Text1" cols="80" rows="5"></textarea>
-  <button id='btn' type="button">发送</button>
+  <div id="console0">
+    <textarea id='text' name="Text1" cols="80" rows="5"></textarea>
+    <button id='btn_send' type="button">发送</button></br>
+    <button id='btn_pant' type="button">关闭心跳</button></br>
+  </div>
+  <br>
+  <div id="blocks"></div>
+  
   <script>
     var ws = new WebSocket(`ws://${window.location.hostname}:2333${window.location.pathname}`);
 
@@ -44,7 +50,7 @@
 
     
     ws.onopen = function () {
-      document.getElementById('btn').onclick = () => {
+      document.getElementById('btn_send').onclick = () => {
         ws.send(
           makeMessage(
             uid_from,
@@ -58,23 +64,33 @@
       var str = e.data;
       var json_data = JSON.parse(str);
       var jscodes = json_data.text.match(/<js>([\s\S]*?)<\/js>/m);
-      var p = document.createElement('div');
-
-      if (jscodes) {
-        p.innerText = json_data.text;
-      } else {
-        p.innerHTML = json_data.text;
-      }
+      
+      
+      var $block = $('<div class="block"></div>');
 
       $('<center><div></div></center>')
         .text((new Date()).toLocaleString())
-        .appendTo('body');
-      $('<div></div>').text(json_data.from + 
-                            (json_data.to ? `@${json_data.to}`: '') + 
-                            ':' ).appendTo('body');
-      document.body.appendChild(p);
-      $('<hr>').appendTo('body');
-      eval(jscodes ? jscodes[1] : '');
+        .appendTo($block);
+
+      $('<div></div>')
+        .text(json_data.from + 
+             (json_data.to ? `@${json_data.to}`: '') + ':' )
+        .appendTo($block);
+
+      $('<pre></pre>').text(json_data.text).appendTo($block);
+
+      var $p = $('<div></div>');
+      if (jscodes) {
+        eval(jscodes[1]);
+      } else {
+        $p.html(json_data.text);
+      }
+
+      $p.appendTo($block);
+
+      $('<hr>').appendTo($block);
+
+      $block.prependTo($("#blocks"));
     };
   </script>
 </body>
