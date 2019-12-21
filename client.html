@@ -6,76 +6,76 @@
   <title>Document</title>
 </head>
 <body>
-<textarea id='text' name="Text1" cols="80" rows="5"></textarea>
-<button id='btn' type="button">发送</button>
-<script>
-  var ws = new WebSocket(`ws://${window.location.hostname}:2333${window.location.pathname}`);
+  <textarea id='text' name="Text1" cols="80" rows="5"></textarea>
+  <button id='btn' type="button">发送</button>
+  <script>
+    var ws = new WebSocket(`ws://${window.location.hostname}:2333${window.location.pathname}`);
 
-  function uri_parse (str_uri) {
-    var uri = str_uri;
-    var cid, uid_from, uid_to;
+    function uri_parse (str_uri) {
+      var uri = str_uri;
+      var cid, uid_from, uid_to;
 
-    var group;
-    if (group = uri.match('^/(.*?)(/([^/@]*))?(@([^/]*))?$')) {
-        cid = group[1] || '';
-        uid_from = group[3] || '';
-        uid_to = group[5] || '';
+      var group;
+      if (group = uri.match('^/(.*?)(/([^/@]*))?(@([^/]*))?$')) {
+          cid = group[1] || '';
+          uid_from = group[3] || '';
+          uid_to = group[5] || '';
+      }
+      console.log({"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)});
+      return {"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)}
     }
-    console.log({"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)});
-    return {"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)}
-  }
 
-  var uri_hash = uri_parse(window.location.pathname),
-      cid = uri_hash.cid,
-      uid_from = uri_hash.uid_from,
-      uid_to = uri_hash.uid_to;
+    var uri_hash = uri_parse(window.location.pathname),
+        cid = uri_hash.cid,
+        uid_from = uri_hash.uid_from,
+        uid_to = uri_hash.uid_to;
 
 
-  function makeMessage(from, to, text) {
-    return JSON.stringify(
-        {
-            'from': from,
-            'to': to,
-            'text': text,
-        }
-    );
-  }
+    function makeMessage(from, to, text) {
+      return JSON.stringify(
+          {
+              'from': from,
+              'to': to,
+              'text': text,
+          }
+      );
+    }
 
 
-  
-  ws.onopen = function () {
-    document.getElementById('btn').onclick = () => {
-      ws.send(
-        makeMessage(
-          uid_from,
-          uid_to,
-          $('#text').val()));
-      $('#text').val('');
+    
+    ws.onopen = function () {
+      document.getElementById('btn').onclick = () => {
+        ws.send(
+          makeMessage(
+            uid_from,
+            uid_to,
+            $('#text').val()));
+        $('#text').val('');
+      };
     };
-  };
 
-  ws.onmessage = (e) => {
-    var str = e.data;
-    var json_data = JSON.parse(str);
-    var jscodes = json_data.text.match(/<js>([\s\S]*?)<\/js>/m);
-    var p = document.createElement('div');
+    ws.onmessage = (e) => {
+      var str = e.data;
+      var json_data = JSON.parse(str);
+      var jscodes = json_data.text.match(/<js>([\s\S]*?)<\/js>/m);
+      var p = document.createElement('div');
 
-    if (jscodes) {
-      p.innerText = json_data.text;
-    } else {
-      p.innerHTML = json_data.text;
-    }
+      if (jscodes) {
+        p.innerText = json_data.text;
+      } else {
+        p.innerHTML = json_data.text;
+      }
 
-    $('<center><div></div></center>')
-      .text((new Date()).toLocaleString())
-      .appendTo('body');
-    $('<div></div>').text(json_data.from + 
-                          (json_data.to ? `@${json_data.to}`: '') + 
-                          ':' ).appendTo('body');
-    document.body.appendChild(p);
-    $('<hr>').appendTo('body');
-    eval(jscodes ? jscodes[1] : '');
-  };
-</script>
+      $('<center><div></div></center>')
+        .text((new Date()).toLocaleString())
+        .appendTo('body');
+      $('<div></div>').text(json_data.from + 
+                            (json_data.to ? `@${json_data.to}`: '') + 
+                            ':' ).appendTo('body');
+      document.body.appendChild(p);
+      $('<hr>').appendTo('body');
+      eval(jscodes ? jscodes[1] : '');
+    };
+  </script>
 </body>
 </html>
