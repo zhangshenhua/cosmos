@@ -27,12 +27,11 @@ function uri_parse (str_uri) {
     var uri = str_uri;
     var cid, uid_from, uid_to;
 
-    var group;
-    if (group = uri.match('^/(.*?)(/([^/@]*))?(@([^/]*))?$')) {
-        cid = group[1] || '';
-        uid_from = group[3] || '';
-        uid_to = group[5] || '';
-    }
+    var group = uri.match('^/(.*?)(/([^/@]*))?(@([^/]*))?$');
+    cid = '/' + group[1];
+    uid_from = group[3] || '';
+    uid_to = group[5] || '';
+    
     console.log({"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)});
     return {"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)}
 }
@@ -80,7 +79,7 @@ var server = ws.createServer(function(conn){
     conn.on('close', (code, reason) => {
         cosmosHash.get(cid).delete(key);
         domain_boardcast(cosmosHash.get(cid).values(), makeCloseMessage(uid_from));
-        console.log(`Connection closed ${key}`);
+        console.log(`Connection close: ${conn.path} ${key}`);
         mylog(cosmosHash.get(cid).count());
     });
 
@@ -92,8 +91,7 @@ var server = ws.createServer(function(conn){
             str);
     });
 
-    mylog(`New connection ${cid}/${uid_from} ${key}`);
-    
+    mylog(`Connection open: ${conn.path} ${key}`);
 
     if (!cosmosHash.get(cid)) {
         var tmp = new HashMap();
