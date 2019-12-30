@@ -108,8 +108,6 @@
              (json_data.to ? `@${json_data.to}`: '') + ':' )
         .appendTo($block);
 
-      $('<pre></pre>').text(json_data.text).appendTo($block);
-
       var $p = $('<div></div>');
       if (jscodes) {
         eval(jscodes[1]);
@@ -118,6 +116,8 @@
       }
 
       $p.appendTo($block);
+
+      $('<pre></pre>').text(json_data.text).appendTo($block);
 
       $('<hr>').appendTo($block);
 
