@@ -97,31 +97,26 @@
       var jscodes = json_data.text.match(/<js>([\s\S]*?)<\/js>/m);
       
       
-      var $block = $('<div class="block"></div>');
+      let $block = $('<div class="block"></div>');
+        $('<center><div class="dateAdded"></div></center>')
+          .text((new Date()).toLocaleString())
+          .appendTo($block);
 
-      $('<center><div></div></center>')
-        .text((new Date()).toLocaleString())
-        .appendTo($block);
+        $('<div class="head"></div>')
+          .text(json_data.from + 
+              (json_data.to ? `@${json_data.to}`: '') + ':' )
+          .appendTo($block);
 
-      $('<div></div>')
-        .text(json_data.from + 
-             (json_data.to ? `@${json_data.to}`: '') + ':' )
-        .appendTo($block);
-
-      var $p = $('<div></div>');
-      if (jscodes) {
-        eval(jscodes[1]);
-      } else {
-        $p.html(json_data.text);
-      }
-
-      $p.appendTo($block);
-
-      $('<pre></pre>').text(json_data.text).appendTo($block);
-
-      $('<hr>').appendTo($block);
-
-      $block.prependTo($("#blocks"));
+        let $p = $('<div class="content"></div>');
+          if (jscodes) {
+            eval(jscodes[1]);
+          } else {
+            $p.html(json_data.text);
+          }
+          $p.appendTo($block);
+        $('<pre></pre>').text(json_data.text).appendTo($block);
+        $('<hr>').appendTo($block);
+        $block.prependTo($("#blocks"));
     };
   </script>
 </body>
