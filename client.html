@@ -99,7 +99,9 @@
       
       let $block = $('<div class="block"></div>');
         $('<center><div class="dateAdded"></div></center>')
-          .text((new Date()).toLocaleString())
+          .text(     
+            json_data.dateAdded ? json_data.dateAdded :
+                                  (new Date()).toLocaleString())
           .appendTo($block);
 
         $('<div class="head"></div>')
