@@ -29,8 +29,8 @@ function uri_parse (str_uri) {
 
     var group = uri.match('^/(.*?)(/([^/@]*))?(@([^/]*))?$');
     cid = '/' + group[1];
-    uid_from = group[3] || '';
-    uid_to = group[5] || '';
+    uid_from = group[3];
+    uid_to = group[5];
     
     console.log({"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)});
     return {"cid": decodeURI(cid), "uid_from": decodeURI(uid_from), "uid_to": decodeURI(uid_to)}
@@ -51,13 +51,6 @@ http.createServer(function (req, res) {
 }).listen(3000);
 
 console. log('Server running at http://localhost:3000/');
-
-
-function arrayRemove(arr, value) {
-    return arr.filter(function(ele){
-        return ele !== value;
-    });
-}
 
 
 var cosmosHash = new HashMap();
@@ -83,12 +76,16 @@ var server = ws.createServer(function(conn){
         mylog(cosmosHash.get(cid).count());
     });
 
-    conn.on('text', function(str) {
+    conn.on('text', function(str) {                   //收到消息后：
         mylog(str);
-        domain_boardcast(
-            cosmosHash.get(cid).values().filter(
-                cn => cn.uid_from === uid_to || !uid_to), 
-            str);
+        domain_boardcast(                             // 转发给：
+            cosmosHash.get(cid).values().filter(      // cid所指宇宙中，
+                cn =>                                 
+                    (cn.uid_from === uid_to)          //【用户名】为【单播对象】(被@者)的连接，
+                     || (uid_to === "undefined")        // 以及由于发送者url中无‘@’符号，从而指所有在线者。
+            ), 
+            str
+        );
     });
 
     mylog(`Connection open: ${conn.path} ${key}`);
