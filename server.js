@@ -61,7 +61,7 @@ var server = ws.createServer(function(conn){
         uid_from = uri_hash.uid_from,
         uid_to = uri_hash.uid_to,
         key = conn.key;
-    conn.uid_from = uid_from;
+    conn.uid_from = uid_from = (uid_from == 'undefined' ? key : uid_from);
 
     conn.on('error', (err)=>{
         console.log(err);
