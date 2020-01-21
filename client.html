@@ -101,7 +101,7 @@
       
       
       let $block = $('<div class="block"></div>');
-        $('<center><div class="dateAdded"></div></center>')
+        $('<div class="dateAdded"></div>')
           .text(     
             json_data.dateAdded ? (new Date(json_data.dateAdded)).toLocaleString() :
                                   (new Date()).toLocaleString())
